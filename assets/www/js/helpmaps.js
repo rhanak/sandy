@@ -71,13 +71,16 @@
       infowindow = new google.maps.InfoWindow;
       jqXHR = $.getJSON('https://api.mongolab.com/api/1/databases/sandy/collections/pwnia?apiKey=50958597e4b0268b29eee111', function(data) {
         return $.each(data, function(i, help) {
-          var latLng, marker;
+          var latLng, letter, letterNumber, marker;
           latLng = new google.maps.LatLng(help.lat, help.long);
           bounds.extend(latLng);
+          letterNumber = "A".charCodeAt(0) + (i % 25);
+          letter = String.fromCharCode(letterNumber);
           marker = new google.maps.Marker({
             map: map,
             animation: google.maps.Animation.DROP,
-            position: latLng
+            position: latLng,
+            icon: "img/markers/red_Marker" + letter + ".png"
           });
           return google.maps.event.addListener(marker, 'click', function() {
             if (!help.description) {

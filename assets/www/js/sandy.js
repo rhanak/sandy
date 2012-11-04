@@ -2,7 +2,7 @@
 (function() {
 
   $(document).ready(function() {
-    var aggregateCMValues;
+    var aggregateCMValues, map, mapOptions;
     aggregateCMValues = function(lat, long) {
       var microshelter;
       microshelter = {};
@@ -35,38 +35,42 @@
         });
       });
     });
+    mapOptions = {
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+    map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
     return $('#shelterButton').on('click', function() {
-      var infowindow, map, mapOptions, refreshMap;
+      var bounds, infowindow, refreshMap;
       $.mobile.loading('show', {
         text: 'Loading shelters near you',
         textVisible: true,
         theme: 'a',
         html: ""
       });
-      mapOptions = {
-        zoom: 10,
-        center: new google.maps.LatLng(40.716843, -73.989514),
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-      };
-      map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
+      bounds = new google.maps.LatLngBounds();
       refreshMap = function() {
         google.maps.event.trigger(map, 'resize');
-        return map.panTo(new google.maps.LatLng(40.716843, -73.989514));
+        map.setCenter(bounds.getCenter());
+        return map.fitBounds(bounds);
       };
       google.maps.event.addListenerOnce(map, 'idle', refreshMap);
       setTimeout(refreshMap, 300);
       infowindow = new google.maps.InfoWindow;
       return $.getJSON('https://api.mongolab.com/api/1/databases/sandy/collections/shelters?apiKey=50958597e4b0268b29eee111', function(data) {
         return $.each(data, function(i, help) {
-          var latLng, marker;
+          var latLng, letter, letterNumber, marker;
           latLng = new google.maps.LatLng(help.lat, help.long);
+          bounds.extend(latLng);
+          letterNumber = "A".charCodeAt(0) + (i % 25);
+          letter = String.fromCharCode(letterNumber);
           marker = new google.maps.Marker({
             map: map,
             animation: google.maps.Animation.DROP,
-            position: latLng
+            position: latLng,
+            icon: "img/markers/blue_Marker" + letter + ".png"
           });
           return google.maps.event.addListener(marker, 'click', function() {
-            infowindow.setContent(help.popserved);
+            infowindow.setContent("<strong>" + help.popserved + "</strong>");
             return infowindow.open(map, marker);
           });
         });

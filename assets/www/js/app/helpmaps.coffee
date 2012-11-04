@@ -71,10 +71,13 @@ $(document).ready ->
                 $.each data, (i, help) ->
                     latLng = new google.maps.LatLng(help.lat, help.long)
                     bounds.extend latLng
+                    letterNumber = "A".charCodeAt(0) + (i % 25)
+                    letter = String.fromCharCode(letterNumber)
                     marker = new google.maps.Marker
                         map:map,
                         animation: google.maps.Animation.DROP,
                         position: latLng
+                        icon: "img/markers/red_Marker#{letter}.png"
                       
                     google.maps.event.addListener marker, 'click', ->
                         help.description = "" unless help.description
