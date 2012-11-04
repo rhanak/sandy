@@ -53,7 +53,7 @@
     };
     map = new google.maps.Map(document.getElementById('help_map_canvas'), mapOptions);
     return $('#PWNIAButton').on('click', function() {
-      var bounds, getPwniaTypes, jqXHR, refreshMap;
+      var bounds, getPwniaTypes, infowindow, jqXHR, refreshMap;
       $.mobile.loading('show', {
         text: 'Loading people in need near you',
         textVisible: true,
@@ -68,9 +68,10 @@
       };
       google.maps.event.addListenerOnce(map, 'idle', refreshMap);
       setTimeout(refreshMap, 300);
+      infowindow = new google.maps.InfoWindow;
       jqXHR = $.getJSON('https://api.mongolab.com/api/1/databases/sandy/collections/pwnia?apiKey=50958597e4b0268b29eee111', function(data) {
         return $.each(data, function(i, help) {
-          var infowindow, latLng, marker;
+          var latLng, marker;
           latLng = new google.maps.LatLng(help.lat, help.long);
           bounds.extend(latLng);
           marker = new google.maps.Marker({
@@ -78,10 +79,8 @@
             animation: google.maps.Animation.DROP,
             position: latLng
           });
-          infowindow = new google.maps.InfoWindow({
-            content: "" + help.name + " <br/> " + (getPwniaTypes(help))
-          });
           return google.maps.event.addListener(marker, 'click', function() {
+            infowindow.setContent("" + help.name + " <br/> " + (getPwniaTypes(help)));
             return infowindow.open(map, marker);
           });
         });

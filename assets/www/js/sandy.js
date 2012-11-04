@@ -36,7 +36,7 @@
       });
     });
     return $('#shelterButton').on('click', function() {
-      var map, mapOptions, refreshMap;
+      var infowindow, map, mapOptions, refreshMap;
       $.mobile.loading('show', {
         text: 'Loading shelters near you',
         textVisible: true,
@@ -55,19 +55,18 @@
       };
       google.maps.event.addListenerOnce(map, 'idle', refreshMap);
       setTimeout(refreshMap, 300);
+      infowindow = new google.maps.InfoWindow;
       return $.getJSON('https://api.mongolab.com/api/1/databases/sandy/collections/shelters?apiKey=50958597e4b0268b29eee111', function(data) {
         return $.each(data, function(i, help) {
-          var infowindow, latLng, marker;
+          var latLng, marker;
           latLng = new google.maps.LatLng(help.lat, help.long);
           marker = new google.maps.Marker({
             map: map,
             animation: google.maps.Animation.DROP,
             position: latLng
           });
-          infowindow = new google.maps.InfoWindow({
-            content: help.popserved
-          });
           return google.maps.event.addListener(marker, 'click', function() {
+            infowindow.setContent(help.popserved);
             return infowindow.open(map, marker);
           });
         });

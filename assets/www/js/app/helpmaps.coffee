@@ -65,6 +65,8 @@ $(document).ready ->
       google.maps.event.addListenerOnce map, 'idle', refreshMap
       setTimeout refreshMap, 300
       
+      infowindow = new google.maps.InfoWindow
+      
       jqXHR = $.getJSON 'https://api.mongolab.com/api/1/databases/sandy/collections/pwnia?apiKey=50958597e4b0268b29eee111', (data) ->  
                 $.each data, (i, help) ->
                     latLng = new google.maps.LatLng(help.lat, help.long)
@@ -73,10 +75,9 @@ $(document).ready ->
                         map:map,
                         animation: google.maps.Animation.DROP,
                         position: latLng
-                    
-                    infowindow = new google.maps.InfoWindow
-                        content: "#{help.name} <br/> #{getPwniaTypes(help)}"     
-                    google.maps.event.addListener marker, 'click', ->      
+                      
+                    google.maps.event.addListener marker, 'click', ->
+                        infowindow.setContent "#{help.name} <br/> #{getPwniaTypes(help)}"     
                         infowindow.open(map,marker)
                         
       jqXHR.complete ->

@@ -52,6 +52,8 @@ $(document).ready ->
       google.maps.event.addListenerOnce map, 'idle', refreshMap
       setTimeout refreshMap, 300
       
+      infowindow = new google.maps.InfoWindow
+      
       $.getJSON 'https://api.mongolab.com/api/1/databases/sandy/collections/shelters?apiKey=50958597e4b0268b29eee111', (data) ->  
               $.each data, (i, help) ->
                   latLng = new google.maps.LatLng(help.lat, help.long)
@@ -59,8 +61,7 @@ $(document).ready ->
                       map:map,
                       animation: google.maps.Animation.DROP,
                       position: latLng
-                  
-                  infowindow = new google.maps.InfoWindow
-                      content: help.popserved     
-                  google.maps.event.addListener marker, 'click', ->      
+
+                  google.maps.event.addListener marker, 'click', -> 
+                      infowindow.setContent help.popserved      
                       infowindow.open(map,marker)
