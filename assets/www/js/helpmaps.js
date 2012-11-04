@@ -38,7 +38,7 @@
             $.mobile.loading('hide');
             $("#hRequestInfo").popup("open");
             changePage = function() {
-              $('#helpButton').trigger('click');
+              $('#PWNIAButton').trigger('click');
               return $.mobile.changePage("#helpMePage", {
                 transition: "slide"
               });
@@ -48,7 +48,7 @@
         });
       });
     });
-    return $('#helpButton').on('click', function() {
+    return $('#PWNIAButton').on('click', function() {
       var map, mapOptions, mylocation, refreshMap;
       $.mobile.loading('show', {
         text: 'Loading people in need near you',

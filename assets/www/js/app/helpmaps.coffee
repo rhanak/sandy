@@ -33,15 +33,13 @@ $(document).ready ->
                 $("#hRequestInfo").popup("open")
                 changePage = ->
                   # Load the page when the button is clicked  
-                  $('#helpButton').trigger('click')
+                  $('#PWNIAButton').trigger('click')
                   $.mobile.changePage "#helpMePage", 
                            transition : "slide"
 
                 setTimeout changePage, 2000
-                
-              
-              
-  $('#helpButton').on ('click'), ->
+      
+  $('#PWNIAButton').on ('click'), ->
 
       $.mobile.loading('show', 
           text : 'Loading people in need near you',
