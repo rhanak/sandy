@@ -2,7 +2,7 @@
 (function() {
 
   $(document).ready(function() {
-    var aggregateCMValues;
+    var aggregateCMValues, aggregateHValues;
     aggregateCMValues = function() {
       var microshelter;
       microshelter = {};
@@ -13,6 +13,41 @@
       microshelter.long = 73.2323;
       return JSON.stringify(microshelter);
     };
+    aggregateHValues = function() {
+      var pwnia;
+      pwnia = {};
+      pwnia.name = $('#hName').val();
+      pwnia.description = $('#hCapacity').val();
+      pwnia.fl = $('#checkbox-2').is(":checked");
+      pwnia.sf = $('#checkbox-3').is(":checked");
+      pwnia.el = $('#checkbox-4').is(":checked");
+      pwnia.fi = $('#checkbox-5').is(":checked");
+      pwnia.td = $('#checkbox-6').is(":checked");
+      pwnia.sd = $('#checkbox-7').is(":checked");
+      pwnia.lat = 23.3232;
+      pwnia.long = 73.2323;
+      return JSON.stringify(pwnia);
+    };
+    $('#submitHelp').on('click', function() {
+      $.mobile.loading('show', {
+        text: 'submitting your request...',
+        textVisible: true,
+        theme: 'a',
+        html: ""
+      });
+      return $.ajax('https://api.mongolab.com/api/1/databases/sandy/collections/pwnia?apiKey=50958597e4b0268b29eee111', {
+        type: 'POST',
+        contentType: 'application/json',
+        data: aggregateHValues(),
+        error: function(jqXHR, textStatus, errorThrown) {
+          return alert("AJAX Error: " + textStatus + ", " + errorThrown);
+        },
+        success: function(data, textStatus, jqXHR) {
+          $.mobile.loading('hide');
+          return $("#hRequestInfo").popup("open");
+        }
+      });
+    });
     $('#submitCreateMicroFilter').on('click', function() {
       $.mobile.loading('show', {
         text: 'submitting your request...',
