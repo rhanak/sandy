@@ -39,11 +39,56 @@ $(document).ready ->
 
                 setTimeout changePage, 2000
   
+  loadMap = ->
+    bounds = new google.maps.LatLngBounds()
+    
+    refreshMap = ->
+      google.maps.event.trigger(map, 'resize') 
+      map.setCenter bounds.getCenter()
+      map.fitBounds bounds 
+      
+    google.maps.event.addListenerOnce map, 'idle', refreshMap
+    setTimeout refreshMap, 300
+    
+    infowindow = new google.maps.InfoWindow
+    
+    jqXHR = $.getJSON 'https://api.mongolab.com/api/1/databases/sandy/collections/pwnia?apiKey=50958597e4b0268b29eee111', (data) ->  
+              $.each data, (i, help) ->
+                  latLng = new google.maps.LatLng(help.lat, help.long)
+                  bounds.extend latLng
+                  letterNumber = "A".charCodeAt(0) + (i % 25)
+                  letter = String.fromCharCode(letterNumber)
+                  marker = new google.maps.Marker
+                      map:map,
+                      animation: google.maps.Animation.DROP,
+                      position: latLng
+                      icon: "img/markers/red_Marker#{letter}.png"
+                    
+                  google.maps.event.addListener marker, 'click', ->
+                      help.description = "" unless help.description
+                      infowindow.setContent "<strong>#{help.name}</strong> <br/> <ul> #{getPwniaTypes(help)} </ul> <i>#{help.description}</i>"     
+                      infowindow.open(map,marker)
+                      
+    jqXHR.complete ->
+      setTimeout refreshMap, 300
+      
+    getPwniaTypes = (help) ->
+      types = ""
+      types += "<li>Flooding</li>" if help.fl
+      types += "<li>Shortage of food</li>" if help.sf
+      types += "<li>Electricity</li>" if help.el
+      types += "<li>Fire</li>" if help.fi
+      types += "<li>Tree Down</li>" if help.td
+      types += "<li>Structurial Damage</li>" if help.sd
+      types
+  
   # share this map instance across instantiations    
   mapOptions = 
             mapTypeId: google.maps.MapTypeId.ROADMAP
           
   map = new google.maps.Map(document.getElementById('help_map_canvas'), mapOptions)
+  
+  loadMap()
   
   $('#PWNIAButton').on ('click'), ->
 
@@ -54,48 +99,8 @@ $(document).ready ->
           html : ""
       );
   
+      loadMap()
       
-      bounds = new google.maps.LatLngBounds()
-      
-      refreshMap = ->
-        google.maps.event.trigger(map, 'resize') 
-        map.setCenter bounds.getCenter()
-        map.fitBounds bounds 
-        
-      google.maps.event.addListenerOnce map, 'idle', refreshMap
-      setTimeout refreshMap, 300
-      
-      infowindow = new google.maps.InfoWindow
-      
-      jqXHR = $.getJSON 'https://api.mongolab.com/api/1/databases/sandy/collections/pwnia?apiKey=50958597e4b0268b29eee111', (data) ->  
-                $.each data, (i, help) ->
-                    latLng = new google.maps.LatLng(help.lat, help.long)
-                    bounds.extend latLng
-                    letterNumber = "A".charCodeAt(0) + (i % 25)
-                    letter = String.fromCharCode(letterNumber)
-                    marker = new google.maps.Marker
-                        map:map,
-                        animation: google.maps.Animation.DROP,
-                        position: latLng
-                        icon: "img/markers/red_Marker#{letter}.png"
-                      
-                    google.maps.event.addListener marker, 'click', ->
-                        help.description = "" unless help.description
-                        infowindow.setContent "<strong>#{help.name}</strong> <br/> <ul> #{getPwniaTypes(help)} </ul> <i>#{help.description}</i>"     
-                        infowindow.open(map,marker)
-                        
-      jqXHR.complete ->
-        setTimeout refreshMap, 300
-        
-      getPwniaTypes = (help) ->
-        types = ""
-        types += "<li>Flooding</li>" if help.fl
-        types += "<li>Shortage of food</li>" if help.sf
-        types += "<li>Electricity</li>" if help.el
-        types += "<li>Fire</li>" if help.fi
-        types += "<li>Tree Down</li>" if help.td
-        types += "<li>Structurial Damage</li>" if help.sd
-        types
 
                   
 

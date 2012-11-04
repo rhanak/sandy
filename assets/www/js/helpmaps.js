@@ -2,7 +2,7 @@
 (function() {
 
   $(document).ready(function() {
-    var aggregateHValues, map, mapOptions;
+    var aggregateHValues, loadMap, map, mapOptions;
     aggregateHValues = function(lat, long) {
       var pwnia;
       pwnia = {};
@@ -48,18 +48,8 @@
         });
       });
     });
-    mapOptions = {
-      mapTypeId: google.maps.MapTypeId.ROADMAP
-    };
-    map = new google.maps.Map(document.getElementById('help_map_canvas'), mapOptions);
-    return $('#PWNIAButton').on('click', function() {
+    loadMap = function() {
       var bounds, getPwniaTypes, infowindow, jqXHR, refreshMap;
-      $.mobile.loading('show', {
-        text: 'Loading people in need near you',
-        textVisible: true,
-        theme: 'a',
-        html: ""
-      });
       bounds = new google.maps.LatLngBounds();
       refreshMap = function() {
         google.maps.event.trigger(map, 'resize');
@@ -117,6 +107,20 @@
         }
         return types;
       };
+    };
+    mapOptions = {
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+    map = new google.maps.Map(document.getElementById('help_map_canvas'), mapOptions);
+    loadMap();
+    return $('#PWNIAButton').on('click', function() {
+      $.mobile.loading('show', {
+        text: 'Loading people in need near you',
+        textVisible: true,
+        theme: 'a',
+        html: ""
+      });
+      return loadMap();
     });
   });
 

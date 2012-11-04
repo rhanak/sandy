@@ -2,7 +2,7 @@
 (function() {
 
   $(document).ready(function() {
-    var aggregateCMValues, map, mapOptions;
+    var aggregateCMValues, loadMap, map, mapOptions;
     aggregateCMValues = function(lat, long) {
       var microshelter;
       microshelter = {};
@@ -35,18 +35,8 @@
         });
       });
     });
-    mapOptions = {
-      mapTypeId: google.maps.MapTypeId.ROADMAP
-    };
-    map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
-    return $('#shelterButton').on('click', function() {
+    loadMap = function() {
       var bounds, infowindow, refreshMap;
-      $.mobile.loading('show', {
-        text: 'Loading shelters near you',
-        textVisible: true,
-        theme: 'a',
-        html: ""
-      });
       bounds = new google.maps.LatLngBounds();
       refreshMap = function() {
         google.maps.event.trigger(map, 'resize');
@@ -75,6 +65,20 @@
           });
         });
       });
+    };
+    mapOptions = {
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+    map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
+    loadMap();
+    return $('#shelterButton').on('click', function() {
+      $.mobile.loading('show', {
+        text: 'Loading shelters near you',
+        textVisible: true,
+        theme: 'a',
+        html: ""
+      });
+      return loadMap();
     });
   });
 
