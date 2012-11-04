@@ -53,7 +53,7 @@
     };
     map = new google.maps.Map(document.getElementById('help_map_canvas'), mapOptions);
     return $('#PWNIAButton').on('click', function() {
-      var bounds, jqXHR, refreshMap;
+      var bounds, getPwniaTypes, jqXHR, refreshMap;
       $.mobile.loading('show', {
         text: 'Loading people in need near you',
         textVisible: true,
@@ -79,16 +79,39 @@
             position: latLng
           });
           infowindow = new google.maps.InfoWindow({
-            content: help.popserved
+            content: "" + help.name + " <br/> " + (getPwniaTypes(help))
           });
           return google.maps.event.addListener(marker, 'click', function() {
             return infowindow.open(map, marker);
           });
         });
       });
-      return jqXHR.complete(function() {
+      jqXHR.complete(function() {
         return setTimeout(refreshMap, 300);
       });
+      return getPwniaTypes = function(help) {
+        var types;
+        types = "";
+        if (help.fl) {
+          types += "Flooding ";
+        }
+        if (help.sf) {
+          types += "Shortage of food ";
+        }
+        if (help.el) {
+          types += "Electricity ";
+        }
+        if (help.fi) {
+          types += "Fire ";
+        }
+        if (help.td) {
+          types += "Tree Down ";
+        }
+        if (help.sd) {
+          types += "Structurial Damage ";
+        }
+        return types;
+      };
     });
   });
 

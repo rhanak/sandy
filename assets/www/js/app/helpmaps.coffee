@@ -73,14 +73,25 @@ $(document).ready ->
                         map:map,
                         animation: google.maps.Animation.DROP,
                         position: latLng
-                  
+                    
                     infowindow = new google.maps.InfoWindow
-                        content: help.popserved     
+                        content: "#{help.name} <br/> #{getPwniaTypes(help)}"     
                     google.maps.event.addListener marker, 'click', ->      
                         infowindow.open(map,marker)
                         
       jqXHR.complete ->
         setTimeout refreshMap, 300
+        
+      getPwniaTypes = (help) ->
+        types = ""
+        types += "Flooding " if help.fl
+        types += "Shortage of food " if help.sf
+        types += "Electricity " if help.el
+        types += "Fire " if help.fi
+        types += "Tree Down " if help.td
+        types += "Structurial Damage " if help.sd
+        types
+
                   
 
         
