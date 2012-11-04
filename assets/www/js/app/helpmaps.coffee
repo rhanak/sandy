@@ -3,7 +3,7 @@ $(document).ready ->
   aggregateHValues = (lat, long) ->
       pwnia = {}
       pwnia.name = $('#hName').val()
-      pwnia.description = $('#hCapacity').val()
+      pwnia.description = $('#hDescription').val()
       pwnia.fl = $('#checkbox-2').is(":checked")
       pwnia.sf = $('#checkbox-3').is(":checked") 
       pwnia.el = $('#checkbox-4').is(":checked")
@@ -77,7 +77,8 @@ $(document).ready ->
                         position: latLng
                       
                     google.maps.event.addListener marker, 'click', ->
-                        infowindow.setContent "<strong>#{help.name}</strong> <br/> <ul> #{getPwniaTypes(help)} </ul>"     
+                        help.description = "" unless help.description
+                        infowindow.setContent "<strong>#{help.name}</strong> <br/> <ul> #{getPwniaTypes(help)} </ul> <i>#{help.description}</i>"     
                         infowindow.open(map,marker)
                         
       jqXHR.complete ->

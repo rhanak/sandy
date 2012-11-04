@@ -7,7 +7,7 @@
       var pwnia;
       pwnia = {};
       pwnia.name = $('#hName').val();
-      pwnia.description = $('#hCapacity').val();
+      pwnia.description = $('#hDescription').val();
       pwnia.fl = $('#checkbox-2').is(":checked");
       pwnia.sf = $('#checkbox-3').is(":checked");
       pwnia.el = $('#checkbox-4').is(":checked");
@@ -80,7 +80,10 @@
             position: latLng
           });
           return google.maps.event.addListener(marker, 'click', function() {
-            infowindow.setContent("<strong>" + help.name + "</strong> <br/> <ul> " + (getPwniaTypes(help)) + " </ul>");
+            if (!help.description) {
+              help.description = "";
+            }
+            infowindow.setContent("<strong>" + help.name + "</strong> <br/> <ul> " + (getPwniaTypes(help)) + " </ul> <i>" + help.description + "</i>");
             return infowindow.open(map, marker);
           });
         });
