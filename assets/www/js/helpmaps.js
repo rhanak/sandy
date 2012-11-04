@@ -49,16 +49,12 @@
       });
     });
     return $('#PWNIAButton').on('click', function() {
-      var map, mapOptions, mylocation, refreshMap;
+      var bounds, map, mapOptions, refreshMap;
       $.mobile.loading('show', {
         text: 'Loading people in need near you',
         textVisible: true,
         theme: 'a',
         html: ""
-      });
-      mylocation = null;
-      Sandy.getLocation(function(position) {
-        return mylocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
       });
       mapOptions = {
         zoom: 13,
@@ -66,11 +62,11 @@
         mapTypeId: google.maps.MapTypeId.ROADMAP
       };
       map = new google.maps.Map(document.getElementById('help_map_canvas'), mapOptions);
+      bounds = new google.maps.LatLngBounds();
       refreshMap = function() {
         google.maps.event.trigger(map, 'resize');
-        if (mylocation != null) {
-          return map.panTo(mylocation);
-        }
+        map.setCenter(bounds.getCenter());
+        return map.fitToBounds(bounds);
       };
       google.maps.event.addListenerOnce(map, 'idle', refreshMap);
       setTimeout(refreshMap, 300);
@@ -78,6 +74,7 @@
         return $.each(data, function(i, help) {
           var infowindow, latLng, marker;
           latLng = new google.maps.LatLng(help.lat, help.long);
+          bounds.extend(latLng);
           marker = new google.maps.Marker({
             map: map,
             animation: google.maps.Animation.DROP,
@@ -86,12 +83,9 @@
           infowindow = new google.maps.InfoWindow({
             content: help.popserved
           });
-          google.maps.event.addListener(marker, 'click', function() {
+          return google.maps.event.addListener(marker, 'click', function() {
             return infowindow.open(map, marker);
           });
-          if (i === 0) {
-            return mylocation = latLng;
-          }
         });
       });
     });

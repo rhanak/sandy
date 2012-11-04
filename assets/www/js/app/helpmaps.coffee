@@ -47,21 +47,20 @@ $(document).ready ->
           theme : 'a',
           html : ""
       );
-      mylocation = null
-      Sandy.getLocation (position) ->
-        mylocation = new google.maps.LatLng position.coords.latitude, position.coords.longitude
-
+  
       mapOptions = 
                 zoom: 13,
                 center: new google.maps.LatLng(40.875323, -73.893512),
                 mapTypeId: google.maps.MapTypeId.ROADMAP
               
       map = new google.maps.Map(document.getElementById('help_map_canvas'), mapOptions)
-        
+      
+      bounds = new google.maps.LatLngBounds()
+      
       refreshMap = ->
         google.maps.event.trigger(map, 'resize') 
-        if mylocation?
-          map.panTo mylocation
+        map.setCenter bounds.getCenter()
+        map.fitToBounds bounds
           
       google.maps.event.addListenerOnce map, 'idle', refreshMap
       setTimeout refreshMap, 300
@@ -69,6 +68,7 @@ $(document).ready ->
       $.getJSON 'https://api.mongolab.com/api/1/databases/sandy/collections/pwnia?apiKey=50958597e4b0268b29eee111', (data) ->  
               $.each data, (i, help) ->
                   latLng = new google.maps.LatLng(help.lat, help.long)
+                  bounds.extend latLng
                   marker = new google.maps.Marker
                       map:map,
                       animation: google.maps.Animation.DROP,
@@ -79,7 +79,6 @@ $(document).ready ->
                   google.maps.event.addListener marker, 'click', ->      
                       infowindow.open(map,marker)
                   
-                  mylocation = latLng if i is 0
 
         
         
