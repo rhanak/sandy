@@ -2,7 +2,7 @@
 (function() {
 
   $(document).ready(function() {
-    var aggregateHValues;
+    var aggregateHValues, map, mapOptions;
     aggregateHValues = function(lat, long) {
       var pwnia;
       pwnia = {};
@@ -48,29 +48,27 @@
         });
       });
     });
+    mapOptions = {
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+    map = new google.maps.Map(document.getElementById('help_map_canvas'), mapOptions);
     return $('#PWNIAButton').on('click', function() {
-      var bounds, map, mapOptions, refreshMap;
+      var bounds, jqXHR, refreshMap;
       $.mobile.loading('show', {
         text: 'Loading people in need near you',
         textVisible: true,
         theme: 'a',
         html: ""
       });
-      mapOptions = {
-        zoom: 13,
-        center: new google.maps.LatLng(40.875323, -73.893512),
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-      };
-      map = new google.maps.Map(document.getElementById('help_map_canvas'), mapOptions);
       bounds = new google.maps.LatLngBounds();
       refreshMap = function() {
         google.maps.event.trigger(map, 'resize');
         map.setCenter(bounds.getCenter());
-        return map.fitToBounds(bounds);
+        return map.fitBounds(bounds);
       };
       google.maps.event.addListenerOnce(map, 'idle', refreshMap);
       setTimeout(refreshMap, 300);
-      return $.getJSON('https://api.mongolab.com/api/1/databases/sandy/collections/pwnia?apiKey=50958597e4b0268b29eee111', function(data) {
+      jqXHR = $.getJSON('https://api.mongolab.com/api/1/databases/sandy/collections/pwnia?apiKey=50958597e4b0268b29eee111', function(data) {
         return $.each(data, function(i, help) {
           var infowindow, latLng, marker;
           latLng = new google.maps.LatLng(help.lat, help.long);
@@ -87,6 +85,9 @@
             return infowindow.open(map, marker);
           });
         });
+      });
+      return jqXHR.complete(function() {
+        return setTimeout(refreshMap, 300);
       });
     });
   });

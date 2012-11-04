@@ -38,7 +38,13 @@ $(document).ready ->
                            transition : "slide"
 
                 setTimeout changePage, 2000
-      
+  
+  # share this map instance across instantiations    
+  mapOptions = 
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+          
+  map = new google.maps.Map(document.getElementById('help_map_canvas'), mapOptions)
+  
   $('#PWNIAButton').on ('click'), ->
 
       $.mobile.loading('show', 
@@ -48,36 +54,33 @@ $(document).ready ->
           html : ""
       );
   
-      mapOptions = 
-                zoom: 13,
-                center: new google.maps.LatLng(40.875323, -73.893512),
-                mapTypeId: google.maps.MapTypeId.ROADMAP
-              
-      map = new google.maps.Map(document.getElementById('help_map_canvas'), mapOptions)
       
       bounds = new google.maps.LatLngBounds()
       
       refreshMap = ->
         google.maps.event.trigger(map, 'resize') 
         map.setCenter bounds.getCenter()
-        map.fitToBounds bounds
-          
+        map.fitBounds bounds 
+        
       google.maps.event.addListenerOnce map, 'idle', refreshMap
       setTimeout refreshMap, 300
       
-      $.getJSON 'https://api.mongolab.com/api/1/databases/sandy/collections/pwnia?apiKey=50958597e4b0268b29eee111', (data) ->  
-              $.each data, (i, help) ->
-                  latLng = new google.maps.LatLng(help.lat, help.long)
-                  bounds.extend latLng
-                  marker = new google.maps.Marker
-                      map:map,
-                      animation: google.maps.Animation.DROP,
-                      position: latLng
+      jqXHR = $.getJSON 'https://api.mongolab.com/api/1/databases/sandy/collections/pwnia?apiKey=50958597e4b0268b29eee111', (data) ->  
+                $.each data, (i, help) ->
+                    latLng = new google.maps.LatLng(help.lat, help.long)
+                    bounds.extend latLng
+                    marker = new google.maps.Marker
+                        map:map,
+                        animation: google.maps.Animation.DROP,
+                        position: latLng
                   
-                  infowindow = new google.maps.InfoWindow
-                      content: help.popserved     
-                  google.maps.event.addListener marker, 'click', ->      
-                      infowindow.open(map,marker)
+                    infowindow = new google.maps.InfoWindow
+                        content: help.popserved     
+                    google.maps.event.addListener marker, 'click', ->      
+                        infowindow.open(map,marker)
+                        
+      jqXHR.complete ->
+        setTimeout refreshMap, 300
                   
 
         
