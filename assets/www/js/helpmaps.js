@@ -2,6 +2,52 @@
 (function() {
 
   $(document).ready(function() {
+    var aggregateHValues;
+    aggregateHValues = function(lat, long) {
+      var pwnia;
+      pwnia = {};
+      pwnia.name = $('#hName').val();
+      pwnia.description = $('#hCapacity').val();
+      pwnia.fl = $('#checkbox-2').is(":checked");
+      pwnia.sf = $('#checkbox-3').is(":checked");
+      pwnia.el = $('#checkbox-4').is(":checked");
+      pwnia.fi = $('#checkbox-5').is(":checked");
+      pwnia.td = $('#checkbox-6').is(":checked");
+      pwnia.sd = $('#checkbox-7').is(":checked");
+      pwnia.lat = lat;
+      pwnia.long = long;
+      return JSON.stringify(pwnia);
+    };
+    $('#submitHelp').on('click', function() {
+      $.mobile.loading('show', {
+        text: 'submitting your request...',
+        textVisible: true,
+        theme: 'a',
+        html: ""
+      });
+      return Sandy.getLocation(function(position) {
+        return $.ajax('https://api.mongolab.com/api/1/databases/sandy/collections/pwnia?apiKey=50958597e4b0268b29eee111', {
+          type: 'POST',
+          contentType: 'application/json',
+          data: aggregateHValues(position.coords.latitude, position.coords.longitude),
+          error: function(jqXHR, textStatus, errorThrown) {
+            return alert("AJAX Error: " + textStatus + ", " + errorThrown);
+          },
+          success: function(data, textStatus, jqXHR) {
+            var changePage;
+            $.mobile.loading('hide');
+            $("#hRequestInfo").popup("open");
+            changePage = function() {
+              $('#helpButton').trigger('click');
+              return $.mobile.changePage("#helpMePage", {
+                transition: "slide"
+              });
+            };
+            return setTimeout(changePage, 2000);
+          }
+        });
+      });
+    });
     return $('#helpButton').on('click', function() {
       var map, mapOptions, mylocation, refreshMap;
       $.mobile.loading('show', {
@@ -12,23 +58,7 @@
       });
       mylocation = null;
       Sandy.getLocation(function(position) {
-        var personNeedhelp;
-        mylocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-        personNeedhelp = {
-          'lat': position.coords.latitude,
-          'long': position.coords.longitude
-        };
-        return $.ajax('https://api.mongolab.com/api/1/databases/sandy/collections/pwnia?apiKey=50958597e4b0268b29eee111', {
-          type: 'POST',
-          contentType: 'application/json',
-          data: JSON.stringify(personNeedhelp),
-          error: function(jqXHR, textStatus, errorThrown) {
-            return alert("AJAX Error: " + textStatus + ", " + errorThrown);
-          },
-          success: function(data, textStatus, jqXHR) {
-            return $.mobile.loading('hide');
-          }
-        });
+        return mylocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
       });
       mapOptions = {
         zoom: 13,
