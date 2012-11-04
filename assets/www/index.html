@@ -1,42 +1,153 @@
-<!DOCTYPE html>
-<!--
-    Licensed to the Apache Software Foundation (ASF) under one
-    or more contributor license agreements.  See the NOTICE file
-    distributed with this work for additional information
-    regarding copyright ownership.  The ASF licenses this file
-    to you under the Apache License, Version 2.0 (the
-    "License"); you may not use this file except in compliance
-    with the License.  You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing,
-    software distributed under the License is distributed on an
-    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-     KIND, either express or implied.  See the License for the
-    specific language governing permissions and limitations
-    under the License.
--->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <meta name="format-detection" content="telephone=no" />
-        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
-        <link rel="stylesheet" type="text/css" href="css/index.css" />
-        <title>Hello World</title>
-    </head>
-    <body>
-        <div class="app">
-            <h1>Apache Cordova</h1>
-            <div id="deviceready" class="blink">
-                <p class="event listening">Connecting to Device</p>
-                <p class="event received">Device is Ready</p>
+<head>
+<title>Social DJ App</title>
+<link rel="stylesheet" href="css/jquery.mobile-1.2.0-alpha.1.min.css" />
+<script type="text/javascript" charset="utf-8" src="cordova-2.2.0.js"></script>
+<script src="http://maps.google.com/maps/api/js?sensor=true" type="text/javascript"></script>
+<script src="js/jquery-1.7.2.min.js"></script>
+
+<script
+    src="js/jquery.mobile-1.2.0.js"></script>
+<script type="text/javascript"> var Sandy = {}</script>
+<script type="text/javascript" src="js/sandy.js"></script>
+<script type="text/javascript" src="js/location.js"></script>
+<script type="text/javascript" src="js/helpmaps.js"></script>
+</head>
+<body>
+
+    <div data-role="page" id="mainPage">
+
+        <div data-role="header">
+            <h1>Sandy Relief System</h1>
+        </div>
+
+        <div data-role="content">
+            <div data-role="controlgroup" data-type="horizontal">
+                <a href="#shelterMap" data-rel="popup" style="width: 11%" data-role="button" data-icon="info">&nbsp;</a>
+                <a id="shelterButton" data-role="button" style="width: 84%" href="#shelterPage" data-rel="page">Shelter Map</a>
+            </div>
+            <div data-role="controlgroup" data-type="horizontal">
+                <a href="#microShelterMap" data-rel="popup" style="width: 11%" data-role="button" data-icon="info">&nbsp;</a>
+                <a id="microShelterButton" data-role="button" style="width: 84%" href="#shelterPage" data-rel="page">Micro Shelter Map</a>
+            </div>
+            <div data-role="controlgroup" data-type="horizontal">
+                <a href="#mapPWNIAInfo" data-rel="popup" style="width: 11%" data-role="button" data-icon="info">&nbsp;</a>
+                <a id="PWNIAButton" data-role="button" style="width:84%"href="#" data-rel="page">Map of PWNIA</a>
+            </div>
+            <div data-role="controlgroup" data-type="horizontal">
+                <a href="#helpMeInfo" data-rel="popup" style="width: 11%" data-role="button" data-icon="info">&nbsp;</a>
+                <a id="helpButton" data-role="button" style="width:84%" href="#helpMePage" data-rel="page">HELP ME!</a>
+            </div>
+            <div data-role="controlgroup" data-type="horizontal">
+                <a href="#createMicroShelterInfo" data-rel="popup" style="width: 11%"data-role="button" data-icon="info">&nbsp;</a>
+                <a id="createMicroShelterPageButton" data-role="button" style="width:84%" href="#createMicroShelterPage" data-rel="page">Create Micro Shelter</a>
+            </div>
+             
+             
+            <!-- <div data-role="popup" id="djListDialog" data-overlay-theme="a">
+                <div data-role="header">
+                    <h1>Loading Shelter Map...</h1>
+                </div>
+                <div data-role="content" id="containerContent">
+                         <ul id="mainList" data-role="listview" data-inset="true" data-theme="a"> 
+                        </ul> 
+                </div>
+            </div> -->
+            <div data-role="popup" id="shelterMap" data-overlay-theme="a" class="ui-content ui-popup ui-body-e ui-overlay-shadow ui-corner-all">
+                <p>Provides the map of Main Shelters (Shelters held by Red Cross / State Government)</p>
+            </div>
+            <div data-role="popup" id="microShelterMap" data-overlay-theme="a" class="ui-content ui-popup ui-body-e ui-overlay-shadow ui-corner-all">
+                <p>Provides the map of Micro Shelters (Homes / Condos / Apartments / Stores which can be used as shelters nearest to you)</p>
+            </div>
+            <div data-role="popup" id="mapPWNIAInfo" data-overlay-theme="a" class="ui-content ui-popup ui-body-e ui-overlay-shadow ui-corner-all">
+                <p>PWNIA: People Who Need Immediate Assistence.  This button provides the map of people who have recently made request to be helped.  Issues could be: short of food, stranded, excess flow of water, etc.  Please see the description of the data points on the map for more info on a particular case.  This map can be used by organization (such as Red Cross) to find the people who are impacted by this disaster</p>
+            </div>
+            <div data-role="popup" id="helpMeInfo" data-overlay-theme="a" class="ui-content ui-popup ui-body-e ui-overlay-shadow ui-corner-all">
+                <p>Use this button if you are in need of help from Red cross from issues such as short of food, stranded, excess flow of water, etc.  If this is an emergency, please dial 911.</p>
+            </div>
+            <div data-role="popup" id="createMicroShelterInfo" data-overlay-theme="a" class="ui-content ui-popup ui-body-e ui-overlay-shadow ui-corner-all">
+                <p>If you can provide a 'micro' shelter for people who may be stranded (without food or water), please use this button to fill out some info so people can find you</p>
             </div>
         </div>
-        <script type="text/javascript" src="cordova-2.2.0.js"></script>
-        <script type="text/javascript" src="js/index.js"></script>
-        <script type="text/javascript">
-            app.initialize();
-        </script>
-    </body>
+        
+    </div>
+    
+    <div id="createMicroShelterPage" data-role="page">
+        <div data-role="header">
+            <a href="#mainPage" data-rel="back" data-role="button">Back</a><h1>Create a Micro Shelter</h1>
+            <a href="#msInfo" data-rel="popup" style="width: 5%"data-role="button" data-icon="info">&nbsp;</a>
+        </div>
+        <div data-role="content">
+            <!-- <ui id="songList" data-filter="true" data-role="listview" data-theme="b"> </ui> -->
+            <div data-role="fieldcontain" class="ui-hide-label">
+                <label for="username">Micro Shelter Name / Owner name:</label>
+                <input type="text" name="username" id="cmName" value="" placeholder="Micro Shelter Name / Owner name:"/>
+            </div>
+            <div data-role="fieldcontain" class="ui-field-contain ui-body ui-br">
+                <label for="slider" class="ui-input-text ui-slider" id="slider-label">Max Capacity:</label>
+                <input type="number" data-type="range" name="slider" id="cmCapacity" value="0" min="0" max="100" class="ui-input-text ui-body-c ui-corner-all ui-shadow-inset ui-slider-input" aria-disabled="true">
+            </div>
+            <div data-role="fieldcontain" class="ui-field-contain ui-body ui-br">
+                <!-- <label for="textarea">Description</label> -->
+                <textarea cols="40" rows="8" name="textarea" id="cmDescription" style="width: 100%;height: 200px" placeholder="Description" class="ui-input-text ui-body-c ui-corner-all ui-shadow-inset"></textarea>
+            </div>
+            <a id="submitCreateMicroFilter" data-role="button" style="width:50%; float:right" href="#createMicroShelterPage" data-rel="popup">Create</a>
+        
+            <p style="clear: right; font-size: 0.8em">Note: We'll be using your current location as the location for the shelter</p>
+        </div>
+
+        <div data-role="popup" id="msRequestInfo">
+            <p>Success!  Thank you for the concern</p>
+        </div>
+        <div data-role="popup" id="msInfo" data-overlay-theme="a" class="ui-content ui-popup ui-body-e ui-overlay-shadow ui-corner-all">
+            <p>Provide a 'micro' shelter for people who may be stranded (without food or water), please use this button to fill out some info so people can find you</p>
+        </div>
+    </div>
+
+    <div id="shelterPage" data-role="page">
+        <div data-role="header">
+            <!-- TODO: add slide back transition, currently data-transition="slide" doesn't work --> 
+            <a href="#mainPage" data-rel="back" data-role="button">Back</a>
+            <h1></h1>
+            <a href="#redCrossInfo" data-rel="popup" data-role="button" data-icon="info">RedCross Info</a>
+        </div>
+        <div data-role="content">
+            <!-- <ui id="songList" data-filter="true" data-role="listview" data-theme="b"> </ui> -->
+            <div id="map_canvas" style="width:100%;height:400px"></div>
+            <div data-role="popup"  id="popupRequestSent" data-overlay-theme="a">
+                <p>Request Sent</p>
+           </div>
+        </div>
+
+
+        <div data-role="popup" id="redCrossInfo" data-overlay-theme="a">
+            <p id="redCrossContent"></p>
+        </div>
+
+    </div>
+
+	<div id="helpMePage" data-role="page">
+        <div data-role="header">
+            <!-- TODO: add slide back transition, currently data-transition="slide" doesn't work --> 
+            <a href="#mainPage" data-rel="back" data-role="button">Back</a>
+            <h1></h1>
+            <a href="#redCrossInfo" data-rel="popup" data-role="button" data-icon="info">RedCross Info</a>
+        </div>
+        <div data-role="content">
+            <!-- <ui id="songList" data-filter="true" data-role="listview" data-theme="b"> </ui> -->
+            <div id="help_map_canvas" style="width:100%;height:400px"></div>
+            <div data-role="popup"  id="popupRequestSent" data-overlay-theme="a">
+                <p>Request Sent</p>
+           </div>
+        </div>
+
+
+        <div data-role="popup" id="redCrossInfo" data-overlay-theme="a">
+            <p id="redCrossContent"></p>
+        </div>
+
+    </div>
+
+</body>
 </html>

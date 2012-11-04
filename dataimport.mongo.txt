@@ -1,0 +1,62 @@
+Lehman College ; 250 Bedford Park Blvd W, Bronx, NY 10458 ; 40.875323, -73.893512
+Brooklyn Tech HS - 29 Fort Greene Pl, Brooklyn, NY 11217 ; 40.688879, -73.976927
+FDR HS - 5800 20 Av, Brooklyn, NY 11204 ; 40.620478, -73.981752
+John Jay HS - 237 7 Av, Brooklyn, NY 11215 ; 40.669601, -73.97928
+Park Slope Armory - 361 15 St, Brooklyn, NY 11215 ; 40.662969, -73.983929
+G. Washington HS - 549 Audubon Av, New York, NY 10040 ; 40.85594, -73.927053
+
+HS of Graphic Arts - 439 W 49 St, New York, NY 10019 ; 40.763362, -73.990565
+Hunter College - 695 Park Av, New York, NY 10065 ; 40.768926, -73.965259
+John Jay College - 445 W 59 St, New York, NY 10019 ; 40.769768, -73.986054
+
+Seward Park HS - 350 Grand St, New York, NY 10002 ; 40.716843, -73.989514
+
+Hillcrest HS - 160-05 Highland Av, Jamaica, NY 11432 ; 40.708714, -73.802145
+
+Queens College - 65-30 Kissena Blvd, Flushing, NY 11367 ; 40.736153, -73.814758
+
+York College - 94-20 Guy R. Brewer Blvd, Jamaica, NY 11451 ; 40.702357, -73.795457
+Susan Wagner HS - 1200 Manor Rd, Staten Island, NY 10314 ; 40.598364, -74.123251
+Tottenville HS - 100 Luten Ave, Staten Island, NY 10312 ; 40.528148, -74.19207
+
+
+# Get all the shelters
+curl -X GET https://api.mongolab.com/api/1/databases/sandy/collections/shelters?apiKey=50958597e4b0268b29eee111
+
+# Add a new micro shelter
+curl -X POST -H 'Content-Type:application/json' --data '{ name: "bob" }' https://api.mongolab.com/api/1/databases/sandy/collections/microshelters?apiKey=50958597e4b0268b29eee111
+
+# Create our microshelters collection so that the ui can add to it.
+db.createCollection("microshelters")
+
+j = { name: 'Lehman College', address: '250 Bedford Park Blvd W, Bronx, NY 10458', popserved: 'All pops', lat: '40.875323', long: '-73.893512' }
+db.shelters.save(j);
+j = { name: 'Brooklyn Tech HS', address: '29 Fort Greene Pl, Brooklyn, NY 11217', popserved: 'Special Medical Needs Only', lat: '40.688879', long: '-73.976927' }
+db.shelters.save(j);
+j = { name: 'FDR HS', address: '5800 20 Av, Brooklyn, NY 11204', popserved: 'All pops', lat: '40.620478', long: '-73.981752' }
+db.shelters.save(j);
+j = { name: 'John Jay HS', address: '237 7 Av, Brooklyn, NY 11215', popserved: 'All pops', lat: '40.669601', long: '-73.97928' }
+db.shelters.save(j);
+j = { name: 'Park Slope Armory', address: '361 15 St, Brooklyn, NY 11215', popserved: 'Special Medical Needs Only', lat: '40.662969', long: '-73.983929' }
+db.shelters.save(j);
+j = { name: 'G. Washington HS', address: '549 Audubon Av, New York, NY 10040', popserved: 'All pops', lat: '40.85594', long: '-73.927053' }
+db.shelters.save(j);
+j = { name: 'HS of Graphic Arts', address: '439 W 49 St, New York, NY 10019', popserved: 'All pops', lat: '40.763362', long: '-73.990565' }
+db.shelters.save(j);
+j = { name: 'Hunter College', address: '695 Park Av, New York, NY 10065', popserved: 'All pops', lat: '40.768926', long: '-73.965259' }
+db.shelters.save(j);
+j = { name: 'John Jay College', address: '445 W 59 St, New York, NY 10019', popserved: 'Special Medical Needs Only', lat: '40.769768', long: '-73.986054' }
+db.shelters.save(j);
+j = { name: 'Seward Park HS', address: '350 Grand St, New York, NY 10002', popserved: 'Evacuation Center Only', lat: '40.716843', long: '-73.989514' }
+db.shelters.save(j);
+j = { name: 'Hillcrest HS', address: '160-05 Highland Av, Jamaica, NY 11432', popserved: 'All pops', lat: '40.708714', long: '-73.802145' }
+db.shelters.save(j);
+j = { name: 'Queens College', address: '65-30 Kissena Blvd, Flushing, NY 11367', popserved: 'All pops', lat: '40.736153', long: '-73.814758' }
+db.shelters.save(j);
+j = { name: 'York College', address: '94-20 Guy R. Brewer Blvd, Jamaica, NY 11451', popserved: 'All pops', lat: '40.702357', long: '-73.795457' }
+db.shelters.save(j);
+j = { name: 'Susan Wagner HS', address: '1200 Manor Rd, Staten Island, NY 10314', popserved: 'All pops', lat: '40.598364', long: '-74.123251' }
+db.shelters.save(j);
+j = { name: 'Tottenville HS', address: '100 Luten Ave, Staten Island, NY 10312', popserved: 'All pops', lat: '40.528148', long: '-74.19207' }
+db.shelters.save(j);
+
