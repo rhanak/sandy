@@ -77,7 +77,7 @@ $(document).ready ->
                         position: latLng
                       
                     google.maps.event.addListener marker, 'click', ->
-                        infowindow.setContent "#{help.name} <br/> #{getPwniaTypes(help)}"     
+                        infowindow.setContent "<strong>#{help.name}</strong> <br/> <ul> #{getPwniaTypes(help)} </ul>"     
                         infowindow.open(map,marker)
                         
       jqXHR.complete ->
@@ -85,12 +85,12 @@ $(document).ready ->
         
       getPwniaTypes = (help) ->
         types = ""
-        types += "Flooding " if help.fl
-        types += "Shortage of food " if help.sf
-        types += "Electricity " if help.el
-        types += "Fire " if help.fi
-        types += "Tree Down " if help.td
-        types += "Structurial Damage " if help.sd
+        types += "<li>Flooding</li>" if help.fl
+        types += "<li>Shortage of food</li>" if help.sf
+        types += "<li>Electricity</li>" if help.el
+        types += "<li>Fire</li>" if help.fi
+        types += "<li>Tree Down</li>" if help.td
+        types += "<li>Structurial Damage</li>" if help.sd
         types
 
                   

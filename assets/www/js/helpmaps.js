@@ -80,7 +80,7 @@
             position: latLng
           });
           return google.maps.event.addListener(marker, 'click', function() {
-            infowindow.setContent("" + help.name + " <br/> " + (getPwniaTypes(help)));
+            infowindow.setContent("<strong>" + help.name + "</strong> <br/> <ul> " + (getPwniaTypes(help)) + " </ul>");
             return infowindow.open(map, marker);
           });
         });
@@ -92,22 +92,22 @@
         var types;
         types = "";
         if (help.fl) {
-          types += "Flooding ";
+          types += "<li>Flooding</li>";
         }
         if (help.sf) {
-          types += "Shortage of food ";
+          types += "<li>Shortage of food</li>";
         }
         if (help.el) {
-          types += "Electricity ";
+          types += "<li>Electricity</li>";
         }
         if (help.fi) {
-          types += "Fire ";
+          types += "<li>Fire</li>";
         }
         if (help.td) {
-          types += "Tree Down ";
+          types += "<li>Tree Down</li>";
         }
         if (help.sd) {
-          types += "Structurial Damage ";
+          types += "<li>Structurial Damage</li>";
         }
         return types;
       };
